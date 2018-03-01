@@ -10,8 +10,8 @@
   vol: size_t: _uint
 */
 
-#include "Quote.h"
-#include "dm.h"
+#include "market/Quote.h"
+#include "dm/dm.h"
 
 static Json *double_serialize(double n) {
   return json_wdouble(n, 4);

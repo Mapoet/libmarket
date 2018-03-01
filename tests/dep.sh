@@ -9,24 +9,13 @@ LIBS="https://github.com/dedeme/libdmc.git libdmc "
 clone() {
   if [ -e tmp ]
   then
-    rm fR tmp
+    rm -fR tmp
   fi
   mkdir tmp
   cd tmp
   git clone $GIT
-  cd $LIB
-  mkdir lib
-  mkdir obj
-  make
-  cd ../..
-  if [ -e $LIB ]
-  then
-    rm -fR $LIB
-  fi
-  mkdir $LIB
-  mv tmp/$LIB/include $LIB
-  mv tmp/$LIB/lib/$LIB.a $LIB
-  rm -fR tmp
+  cp -R $LIB/include ../../../
+  cp -R $LIB/src ../../../
 }
 
 if [ ! -e bin ]

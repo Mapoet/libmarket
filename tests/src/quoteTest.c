@@ -3,7 +3,7 @@
 
 #include "quoteTest.h"
 #include "dm.h"
-#include "Quote.h"
+#include "market/Quote.h"
 
 void quote_test() {
   puts("Quote test:");

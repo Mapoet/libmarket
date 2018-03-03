@@ -7,6 +7,7 @@
 #include "feesTest.h"
 #include "buyTest.h"
 #include "sellTest.h"
+#include "pfTest.h"
 
 int main (int argc, char **argv) {
 
@@ -16,6 +17,7 @@ int main (int argc, char **argv) {
   quote_test();
   fees_test();
   buy_test();
+  pf_test();
 
   return(0);
 }

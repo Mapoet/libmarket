@@ -2,7 +2,7 @@
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
 #include "pfTest.h"
-#include "dm/dm.h"
+#include "dmc/all.h"
 #include "market/Pf.h"
 
 void pf_test() {

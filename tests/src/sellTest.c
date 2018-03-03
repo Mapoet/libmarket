@@ -2,7 +2,7 @@
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
 #include "sellTest.h"
-#include "dm/dm.h"
+#include "dmc/all.h"
 #include "market/Sell.h"
 #include "market/fees.h"
 

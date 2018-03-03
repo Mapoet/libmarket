@@ -11,7 +11,7 @@ struct:Quote
 */
 
 #include "market/Quote.h"
-#include "dm/dm.h"
+#include "dmc/all.h"
 
 /*.-.*/
 struct quote_Quote {

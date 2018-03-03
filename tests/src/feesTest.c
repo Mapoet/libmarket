@@ -2,7 +2,7 @@
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
 #include "feesTest.h"
-#include "dm/dm.h"
+#include "dmc/all.h"
 #include "market/fees.h"
 
 static int eq(double n1, double n2) {

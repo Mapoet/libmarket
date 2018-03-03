@@ -9,5 +9,5 @@ lib/lib$(LIB).a : $(OBJECTS)
 obj/%.o : src/market/%.c include/market/%.h
 	gcc $(CFLAGS) -c $< -o $@ \
 		-Iinclude -Ilib/libdmc/include \
-		-L../lib -l$(LIB) -Llib/libdmc -ldmc\
+		-L../lib -l$(LIB) -Llib/libdmc -ldmc \
 		-lgc

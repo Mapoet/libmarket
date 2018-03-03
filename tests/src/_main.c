@@ -4,6 +4,9 @@
 #include "dm/dm.h"
 
 #include "quoteTest.h"
+#include "feesTest.h"
+#include "buyTest.h"
+#include "sellTest.h"
 
 int main (int argc, char **argv) {
 
@@ -11,6 +14,8 @@ int main (int argc, char **argv) {
   sys_init("marketTest");
 
   quote_test();
+  fees_test();
+  buy_test();
 
   return(0);
 }

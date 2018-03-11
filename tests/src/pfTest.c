@@ -22,7 +22,7 @@ void pf_test() {
   pf_add(pf2, 1, 10, 3.5);
 
   assert(arr_size(pf1) == 1);
-  assert(pf_entry_stocks(pf_get(pf1, 0)) == 5);
+  assert(pf_stocks(pf1, 0) == 5);
   assert(arr_size(pf2) == 2);
   assert(pf_entry_stocks(pf_get(pf2, 0)) == 15);
   assert(pf_entry_stocks(pf_get(pf2, 1)) == 10);

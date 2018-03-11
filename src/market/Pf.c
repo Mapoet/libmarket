@@ -74,6 +74,9 @@ Pf *pf_copy(Pf *this) {
 }
 
 void pf_add(Pf *this, size_t nick, size_t stocks, double price) {
+  if (!stocks)
+    THROW "Try of adding 0 stoks to porfolio" _THROW
+
   bool new = true;
   EACH(this, Pf_entry, e) {
     if (e->nick == nick) {
@@ -123,7 +126,12 @@ Pf_entry *pf_get(Pf *this, size_t nick) {
       return e;
     }
   }_EACH
-  return 0;
+  return NULL;
+}
+
+size_t pf_stocks(Pf *this, size_t nick) {
+  Pf_entry *e = pf_get(this, nick);
+  return e ? e->stocks : 0;
 }
 
 size_t *pf_nicks(Pf *this) {

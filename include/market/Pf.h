@@ -49,8 +49,11 @@ void pf_add(Pf *this, size_t nick, size_t stocks, double price);
 ///
 void pf_remove(Pf *this, size_t nick, size_t stocks);
 
-/// pf_get returns the stock number of a nick.
+/// pf_get returns the entry of a nick or NULL if it does not exist.
 Pf_entry *pf_get(Pf *this, size_t nick);
+
+/// pf_get returns the stock number of a nick.
+size_t pf_stocks(Pf *this, size_t nick);
 
 ///  pf_nicks returns an array of size 'pf_size', with all the nicks of 'this'.
 size_t *pf_nicks(Pf *this);

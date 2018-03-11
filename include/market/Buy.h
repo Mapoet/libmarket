@@ -14,13 +14,16 @@
 typedef struct buy_Buy Buy;
 
 ///
-Buy *buy_new(size_t nick, double money);
+Buy *buy_new(size_t nick, size_t stocks, double price);
 
 ///
 size_t buy_nick(Buy *this);
 
 ///
-double buy_money(Buy *this);
+size_t buy_stocks(Buy *this);
+
+///
+double buy_price(Buy *this);
 
 ///
 Json *buy_serialize(Buy *this);
@@ -30,13 +33,13 @@ Buy *buy_restore(Json *s);
 
 /*.-.*/
 
-/// buy_do makes buy and returns actual stocks bought (stocks_r) and its cost
-/// (cost_r)
-void buy_do(
-  size_t *stocks_r,
-  double *cost_r,
-  Buy *this,
-  double price
-);
+/// buy_do makes a buy and returns its cost adding fees.
+double buy_do(Buy *this);
+
+/// buy_calc returns the number of stocks which can be bought given the
+/// available money.
+///   money: Money available
+///   price: Price of one stock
+size_t buy_calc(double money, double price);
 
 #endif

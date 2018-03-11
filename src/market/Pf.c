@@ -8,18 +8,21 @@
 struct: Pf_entry
   nick: size_t: _uint
   stocks: size_t: _uint
+  price:double: _double4
 */
 
 /*.-.*/
 struct pf_entry_Pf_entry {
   size_t nick;
   size_t stocks;
+  double price;
 };
 
-Pf_entry *pf_entry_new(size_t nick, size_t stocks) {
+Pf_entry *pf_entry_new(size_t nick, size_t stocks, double price) {
   Pf_entry *this = MALLOC(Pf_entry);
   this->nick = nick;
   this->stocks = stocks;
+  this->price = price;
   return this;
 }
 
@@ -33,10 +36,16 @@ size_t pf_entry_stocks(Pf_entry *this) {
   return this->stocks;
 }
 
+inline
+double pf_entry_price(Pf_entry *this) {
+  return this->price;
+}
+
 Json *pf_entry_serialize(Pf_entry *this) {
   Arr/*Json*/ *serial = arr_new();
   jarr_auint(serial, this->nick);
   jarr_auint(serial, this->stocks);
+  jarr_adouble(serial, this->price, 4);
   return json_warray(serial);
 }
 
@@ -46,6 +55,7 @@ Pf_entry *pf_entry_restore(Json *s) {
   size_t i = 0;
   this->nick = jarr_guint(serial, i++);
   this->stocks = jarr_guint(serial, i++);
+  this->price = jarr_gdouble(serial, i++);
   return this;
 }
 /*.-.*/
@@ -58,22 +68,23 @@ Pf *pf_new(void) {
 inline
 Pf *pf_copy(Pf *this) {
   /**/FNM(copy, Pf_entry, e) {
-  /**/  return pf_entry_new(e->nick, e->stocks);
+  /**/  return pf_entry_new(e->nick, e->stocks, e->price);
   /**/}_FN
   return it_to(it_map(it_from(this), copy));
 }
 
-void pf_add(Pf *this, size_t nick, size_t stocks) {
+void pf_add(Pf *this, size_t nick, size_t stocks, double price) {
   bool new = true;
   EACH(this, Pf_entry, e) {
     if (e->nick == nick) {
+      e->price = (e->price * e->stocks + stocks * price) / (e->stocks + stocks);
       e->stocks += stocks;
       new = false;
       break;
     }
   }_EACH
   if (new) {
-    arr_add(this, pf_entry_new(nick, stocks));
+    arr_add(this, pf_entry_new(nick, stocks, price));
   }
 }
 
@@ -106,10 +117,10 @@ void pf_remove(Pf *this, size_t nick, size_t stocks) {
   }
 }
 
-size_t pf_get(Pf *this, size_t nick) {
+Pf_entry *pf_get(Pf *this, size_t nick) {
   EACH(this, Pf_entry, e) {
     if (e->nick == nick) {
-      return e->stocks;
+      return e;
     }
   }_EACH
   return 0;

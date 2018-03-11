@@ -11,19 +11,19 @@
 void buy_test() {
   puts("Buy test:");
 
-  Buy *b1 = buy_new(1, 20000.0);
+  size_t n1 = buy_calc(20000.0, 1.2);
+  Buy *b1 = buy_new(1, n1, 1.2);
   assert(buy_nick(b1) == 1);
-  assert(eq(buy_money(b1), 20000));
+  assert(buy_stocks(b1) == n1);
+  assert(eq(buy_price(b1), 1.2));
   Json *js = buy_serialize(b1);
-  assert(!strcmp(js, "[1,20000.00]"));
+  assert(!strcmp(js, str_printf("[1,%d,1.2000]", n1)));
 
-  uint stocks;
-  double cost;
-  buy_do(&stocks, &cost, b1, 1.2);
+  double cost = buy_do(b1);
   assert(cost < 20000);
-  double vstocks1 = (stocks + 1) * 1.2;
+  double vstocks1 = (buy_stocks(b1) + 1) * 1.2;
   assert(vstocks1 + fees_app(vstocks1) > 20000);
-  double vstocks = stocks * 1.2;
+  double vstocks = buy_stocks(b1) * 1.2;
   assert(eq(vstocks + fees_app(vstocks), cost));
 
   puts("  Finished");

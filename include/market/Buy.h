@@ -14,13 +14,13 @@
 typedef struct buy_Buy Buy;
 
 ///
-Buy *buy_new(size_t nick, size_t stocks, double price);
-
-///
 size_t buy_nick(Buy *this);
 
 ///
 size_t buy_stocks(Buy *this);
+
+///
+bool buy_limit(Buy *this);
 
 ///
 double buy_price(Buy *this);
@@ -32,6 +32,14 @@ Json *buy_serialize(Buy *this);
 Buy *buy_restore(Json *s);
 
 /*.-.*/
+
+/// buy_new makes a marker order. Its buy_limit() value is false and
+/// its buy_price() value is 0
+Buy *buy_new(size_t nick, size_t stocks);
+
+/// buy_new_limit makes a limit order. Its buy_limit() value is true and
+/// its buy_price() value is 'price'
+Buy *buy_new_limit(size_t nick, size_t stocks, double price);
 
 /// buy_do makes a buy and returns its cost adding fees.
 double buy_do(Buy *this);

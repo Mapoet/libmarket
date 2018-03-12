@@ -17,6 +17,7 @@ int main (int argc, char **argv) {
   quote_test();
   fees_test();
   buy_test();
+  sell_test();
   pf_test();
 
   return(0);

@@ -15,7 +15,7 @@ void sell_test() {
   assert(sell_nick(s1) == 1);
   assert(sell_stocks(s1) == 21556);
   Json *js = sell_serialize(s1);
-  assert(!strcmp(js, "[1,21556]"));
+  assert(!strcmp(js, "[1,21556,false,0.0000]"));
 
   double r = sell_do(s1, 1.2);
   double vstocks = 21556 * 1.2;

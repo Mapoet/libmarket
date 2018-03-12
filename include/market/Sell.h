@@ -14,13 +14,16 @@
 typedef struct sell_Sell Sell;
 
 ///
-Sell *sell_new(size_t nick, size_t stocks);
-
-///
 size_t sell_nick(Sell *this);
 
 ///
 size_t sell_stocks(Sell *this);
+
+///
+bool sell_limit(Sell *this);
+
+///
+double sell_price(Sell *this);
 
 ///
 Json *sell_serialize(Sell *this);
@@ -29,6 +32,14 @@ Json *sell_serialize(Sell *this);
 Sell *sell_restore(Json *s);
 
 /*.-.*/
+
+/// sell_new makes a marker order. Its sell_limit() value is false and
+/// its sell_price() value is 0
+Sell *sell_new(size_t nick, size_t stocks);
+
+/// buy_new_limit makes a limit order. Its sell_limit() value is true and
+/// its sell_price() value is 'price'
+Sell *sell_new_limit(size_t nick, size_t stocks, double price);
 
 /// seell_do makes sell and returns its income.
 double sell_do(Sell *this, double price);

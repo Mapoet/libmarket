@@ -10,6 +10,8 @@
 
 /*.-.*/
 
+#include "dmc/Json.h"
+
 ///
 typedef struct buy_Buy Buy;
 
@@ -26,10 +28,10 @@ bool buy_limit(Buy *this);
 double buy_price(Buy *this);
 
 ///
-Json *buy_serialize(Buy *this);
+Json *buy_to_json(Buy *this);
 
 ///
-Buy *buy_restore(Json *s);
+Buy *buy_from_json(Json *s);
 
 /*.-.*/
 

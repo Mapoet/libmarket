@@ -11,6 +11,8 @@
 
 /*.-.*/
 
+#include "dmc/Json.h"
+
 ///
 typedef struct pf_entry_Pf_entry Pf_entry;
 
@@ -27,10 +29,10 @@ size_t pf_entry_stocks(Pf_entry *this);
 double pf_entry_price(Pf_entry *this);
 
 ///
-Json *pf_entry_serialize(Pf_entry *this);
+Json *pf_entry_to_json(Pf_entry *this);
 
 ///
-Pf_entry *pf_entry_restore(Json *s);
+Pf_entry *pf_entry_from_json(Json *s);
 
 /*.-.*/
 
@@ -62,10 +64,10 @@ size_t *pf_nicks(Pf *this);
 size_t pf_size(Pf *this);
 
 ///
-Json *pf_serialize(Pf *this);
+Json *pf_to_json(Pf *this);
 
 ///
-Pf *pf_restore(Json *s);
+Pf *pf_from_json(Json *s);
 
 #endif
 

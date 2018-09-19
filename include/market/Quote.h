@@ -10,6 +10,8 @@
 
 /*.-.*/
 
+#include "dmc/Json.h"
+
 ///
 typedef struct quote_Quote Quote;
 
@@ -38,10 +40,10 @@ double quote_min(Quote *this);
 size_t quote_vol(Quote *this);
 
 ///
-Json *quote_serialize(Quote *this);
+Json *quote_to_json(Quote *this);
 
 ///
-Quote *quote_restore(Json *s);
+Quote *quote_from_json(Json *s);
 
 /*.-.*/
 

@@ -2,8 +2,9 @@
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
 #include "feesTest.h"
-#include "dmc/all.h"
+#include "dmc/std.h"
 #include "market/fees.h"
+#include "assert.h"
 
 static int eq(double n1, double n2) {
   return n1 <= (n2 + 0.00001) && (n1 >= n2 - 0.00001);

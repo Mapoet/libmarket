@@ -2,9 +2,11 @@
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
 #include "buyTest.h"
-#include "dmc/all.h"
+#include "dmc/std.h"
+#include "dmc/Dec.h"
 #include "market/Buy.h"
 #include "market/fees.h"
+#include "assert.h"
 
 #define eq(a, b) dec_eq_gap(a, b, 0.00001)
 
@@ -16,8 +18,8 @@ void buy_test() {
   assert(buy_nick(b1) == 1);
   assert(buy_stocks(b1) == n1);
   assert(eq(buy_price(b1), 1.2));
-  Json *js = buy_serialize(b1);
-  assert(!strcmp(js, str_printf("[1,%d,true,1.2000]", n1)));
+  Json *js = buy_to_json(b1);
+  assert(str_eq((char *)js, str_printf("[1,%d,true,1.2000]", n1)));
 
   double cost = buy_do(b1);
   assert(cost < 20000);

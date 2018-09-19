@@ -10,6 +10,8 @@
 
 /*.-.*/
 
+#include "dmc/Json.h"
+
 ///
 typedef struct sell_Sell Sell;
 
@@ -26,10 +28,10 @@ bool sell_limit(Sell *this);
 double sell_price(Sell *this);
 
 ///
-Json *sell_serialize(Sell *this);
+Json *sell_to_json(Sell *this);
 
 ///
-Sell *sell_restore(Json *s);
+Sell *sell_from_json(Json *s);
 
 /*.-.*/
 

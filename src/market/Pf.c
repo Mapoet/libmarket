@@ -5,7 +5,7 @@
 #include <dmc/std.h>
 
 /* .+.
-struct: Pf_entry
+struct: PfEntry
   nick: size_t: _uint
   stocks: size_t: _uint
   price:double: _double 4
@@ -14,36 +14,36 @@ struct: Pf_entry
 /*.-.*/
 #include "dmc/ct/Ajson.h"
 
-struct pf_entry_Pf_entry {
+struct pfEntry_PfEntry {
   size_t nick;
   size_t stocks;
   double price;
 };
 
-Pf_entry *pf_entry_new(size_t nick, size_t stocks, double price) {
-  Pf_entry *this = MALLOC(Pf_entry);
+PfEntry *pfEntry_new(size_t nick, size_t stocks, double price) {
+  PfEntry *this = MALLOC(PfEntry);
   this->nick = nick;
   this->stocks = stocks;
   this->price = price;
   return this;
 }
 
-size_t pf_entry_nick(Pf_entry *this) {
+size_t pfEntry_nick(PfEntry *this) {
   XNULL(this)
   return this->nick;
 }
 
-size_t pf_entry_stocks(Pf_entry *this) {
+size_t pfEntry_stocks(PfEntry *this) {
   XNULL(this)
   return this->stocks;
 }
 
-double pf_entry_price(Pf_entry *this) {
+double pfEntry_price(PfEntry *this) {
   XNULL(this)
   return this->price;
 }
 
-Json *pf_entry_to_json(Pf_entry *this) {
+Json *pfEntry_to_json(PfEntry *this) {
   XNULL(this)
   Ajson *serial = ajson_new();
   jarr_auint(serial, this->nick);
@@ -52,10 +52,10 @@ Json *pf_entry_to_json(Pf_entry *this) {
   return json_warray(serial);
 }
 
-Pf_entry *pf_entry_from_json(Json *js) {
+PfEntry *pfEntry_from_json(Json *js) {
   XNULL(js)
   Ajson *serial = json_rarray(js);
-  Pf_entry *this = MALLOC(Pf_entry);
+  PfEntry *this = MALLOC(PfEntry);
   size_t i = 0;
   this->nick = jarr_guint(serial, i++);
   this->stocks = jarr_guint(serial, i++);
@@ -66,15 +66,15 @@ Pf_entry *pf_entry_from_json(Json *js) {
 
 inline
 Pf *pf_new(void) {
-  return arr_new();
+  return (Pf *)arr_new();
 }
 
 inline
 Pf *pf_copy(Pf *this) {
-  /**/FNM(copy, Pf_entry, e) {
-  /**/  return pf_entry_new(e->nick, e->stocks, e->price);
+  /**/FNM(copy, PfEntry, e) {
+  /**/  return pfEntry_new(e->nick, e->stocks, e->price);
   /**/}_FN
-  return arr_from_it(it_map(arr_to_it(this), copy));
+  return (Pf *)arr_from_it(it_map(arr_to_it((Arr *)this), copy));
 }
 
 void pf_add(Pf *this, size_t nick, size_t stocks, double price) {
@@ -82,7 +82,7 @@ void pf_add(Pf *this, size_t nick, size_t stocks, double price) {
     THROW("") "Try of adding 0 stoks to porfolio" _THROW
 
   bool new = true;
-  EACH(this, Pf_entry, e) {
+  EACH(this, PfEntry, e) {
     if (e->nick == nick) {
       e->price = (e->price * e->stocks + stocks * price) / (e->stocks + stocks);
       e->stocks += stocks;
@@ -91,7 +91,7 @@ void pf_add(Pf *this, size_t nick, size_t stocks, double price) {
     }
   }_EACH
   if (new) {
-    arr_add(this, pf_entry_new(nick, stocks, price));
+    arr_add((Arr *)this, pfEntry_new(nick, stocks, price));
   }
 }
 
@@ -99,7 +99,7 @@ void pf_remove(Pf *this, size_t nick, size_t stocks) {
   size_t n = 0;
   bool error = true;
   int index = -1;
-  EACH(this, Pf_entry, e) {
+  EACH(this, PfEntry, e) {
     if (e->nick == nick) {
       if (e->stocks == stocks) {
         index = _i;
@@ -120,12 +120,12 @@ void pf_remove(Pf *this, size_t nick, size_t stocks) {
     _THROW
   }
   if (index != -1) {
-    arr_remove(this, index);
+    arr_remove((Arr *)this, index);
   }
 }
 
-Pf_entry *pf_get(Pf *this, size_t nick) {
-  EACH(this, Pf_entry, e) {
+PfEntry *pf_get(Pf *this, size_t nick) {
+  EACH(this, PfEntry, e) {
     if (e->nick == nick) {
       return e;
     }
@@ -134,44 +134,39 @@ Pf_entry *pf_get(Pf *this, size_t nick) {
 }
 
 size_t pf_stocks(Pf *this, size_t nick) {
-  Pf_entry *e = pf_get(this, nick);
+  PfEntry *e = pf_get(this, nick);
   return e ? e->stocks : 0;
 }
 
 size_t *pf_nicks(Pf *this) {
-  size_t size = arr_size(this);
+  size_t size = arr_size((Arr *)this);
   size_t *r = ATOMIC(sizeof(size_t) * size);
   size_t *p = r;
-  EACH(this, Pf_entry, e) {
+  EACH(this, PfEntry, e) {
     *p++ = e->nick;
   }_EACH
-
-//  Pf_entry **es = (Pf_entry **)arr_es(this);
-//  RANGE0(i, size) {
-//    *p++ = (*es++)->nick;
-//  }_RANGE
   return r;
 }
 
 inline
 size_t pf_size(Pf *this) {
-  return arr_size(this);
+  return arr_size((Arr *)this);
 }
 
 Json *pf_to_json(Pf *this) {
   Ajson *jr = ajson_new();
 
-  EACH(this, Pf_entry, pe) {
-    ajson_add(jr, pf_entry_to_json(pe));
+  EACH(this, PfEntry, pe) {
+    ajson_add(jr, pfEntry_to_json(pe));
   }_EACH
 
   return json_warray(jr);
 }
 
 Pf *pf_from_json(Json *s) {
-  Pf *this = arr_new();
+  Pf *this = (Pf *)arr_new();
   EACH(json_rarray(s), Json, js) {
-    arr_add(this, pf_entry_from_json(js));
+    arr_add((Arr *)this, pfEntry_from_json(js));
   }_EACH
   return this;
 }

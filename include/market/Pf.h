@@ -14,30 +14,30 @@
 #include "dmc/Json.h"
 
 ///
-typedef struct pf_entry_Pf_entry Pf_entry;
+typedef struct pfEntry_PfEntry PfEntry;
 
 ///
-Pf_entry *pf_entry_new(size_t nick, size_t stocks, double price);
+PfEntry *pfEntry_new(size_t nick, size_t stocks, double price);
 
 ///
-size_t pf_entry_nick(Pf_entry *this);
+size_t pfEntry_nick(PfEntry *this);
 
 ///
-size_t pf_entry_stocks(Pf_entry *this);
+size_t pfEntry_stocks(PfEntry *this);
 
 ///
-double pf_entry_price(Pf_entry *this);
+double pfEntry_price(PfEntry *this);
 
 ///
-Json *pf_entry_to_json(Pf_entry *this);
+Json *pfEntry_to_json(PfEntry *this);
 
 ///
-Pf_entry *pf_entry_from_json(Json *s);
+PfEntry *pfEntry_from_json(Json *s);
 
 /*.-.*/
 
 ///
-typedef Arr/*Pf_entry*/ Pf;
+typedef struct pf_Pf Pf;
 
 ///
 Pf *pf_new(void);
@@ -52,7 +52,7 @@ void pf_add(Pf *this, size_t nick, size_t stocks, double price);
 void pf_remove(Pf *this, size_t nick, size_t stocks);
 
 /// pf_get returns the entry of a nick or NULL if it does not exist.
-Pf_entry *pf_get(Pf *this, size_t nick);
+PfEntry *pf_get(Pf *this, size_t nick);
 
 /// pf_get returns the stock number of a nick.
 size_t pf_stocks(Pf *this, size_t nick);

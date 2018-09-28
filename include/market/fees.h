@@ -6,6 +6,7 @@
 #ifndef MARKET_FEES_H
   # define MARKET_FEES_H
 
+///
 double fees_app(double money);
 
 #endif

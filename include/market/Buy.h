@@ -22,7 +22,7 @@ size_t buy_nick(Buy *this);
 size_t buy_stocks(Buy *this);
 
 ///
-bool buy_limit(Buy *this);
+bool buy_limited(Buy *this);
 
 ///
 double buy_price(Buy *this);
@@ -35,16 +35,17 @@ Buy *buy_from_json(Json *s);
 
 /*.-.*/
 
-/// buy_new makes a marker order. Its buy_limit() value is false and
-/// its buy_price() value is 0
-Buy *buy_new(size_t nick, size_t stocks);
+/// buy_new makes a 'marker order'. Its buy_limited() value is 'false' and
+/// its buy_price() is a approximative value based in quotes of day.
+Buy *buy_new(size_t nick, size_t stocks, double price);
 
-/// buy_new_limit makes a limit order. Its buy_limit() value is true and
+/// buy_new_limit makes a 'limited order'. Its buy_limited() value is 'true' and
 /// its buy_price() value is 'price'
-Buy *buy_new_limit(size_t nick, size_t stocks, double price);
+Buy *buy_new_limited(size_t nick, size_t stocks, double price);
 
-/// buy_do makes a buy and returns its cost adding fees.
-double buy_do(Buy *this);
+/// buy_do makes a buy and returns its cost adding fees. If the operation
+/// can not be done, it returns 0.
+double buy_do(Buy *this, double price);
 
 /// buy_calc returns the number of stocks which can be bought given the
 /// available money.

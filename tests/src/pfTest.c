@@ -13,21 +13,21 @@ void pf_test() {
   puts("Pf test:");
 
   Pf *pf1 = pf_new();
-  assert(arr_size(pf1) == 0);
+  assert(pf_size(pf1) == 0);
   pf_add(pf1, 0, 5, 1.2);
-  assert(arr_size(pf1) == 1);
-  assert(pf_entry_stocks(pf_get(pf1, 0)) == 5);
-  assert(eq(pf_entry_price(pf_get(pf1, 0)), 1.2));
+  assert(pf_size(pf1) == 1);
+  assert(pfEntry_stocks(pf_get(pf1, 0)) == 5);
+  assert(eq(pfEntry_price(pf_get(pf1, 0)), 1.2));
 
   Pf *pf2 = pf_copy(pf1);
   pf_add(pf2, 0, 10, 0.9);
   pf_add(pf2, 1, 10, 3.5);
 
-  assert(arr_size(pf1) == 1);
+  assert(pf_size(pf1) == 1);
   assert(pf_stocks(pf1, 0) == 5);
-  assert(arr_size(pf2) == 2);
-  assert(pf_entry_stocks(pf_get(pf2, 0)) == 15);
-  assert(pf_entry_stocks(pf_get(pf2, 1)) == 10);
+  assert(pf_size(pf2) == 2);
+  assert(pfEntry_stocks(pf_get(pf2, 0)) == 15);
+  assert(pfEntry_stocks(pf_get(pf2, 1)) == 10);
 
   assert(str_eq((char *)pf_to_json(pf1), "[[0,5,1.2000]]"));
   assert(str_eq((char *)pf_to_json(pf2), "[[0,15,1.0000],[1,10,3.5000]]"));

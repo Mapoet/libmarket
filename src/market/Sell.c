@@ -91,6 +91,7 @@ Sell *sell_new_limited(size_t nick, size_t stocks, double price) {
 }
 
 double sell_do(Sell *this, double price) {
+  XNULL(this)
   if (this->limited && price < this->price) {
     return 0;
   }

@@ -4,6 +4,12 @@
 #include "market/Pf.h"
 #include <dmc/std.h>
 
+#define TY PfEntry
+#define FN pfEntry
+#include "dmc/tpl/topt.c"
+#undef TY
+#undef FN
+
 /* .+.
 struct: PfEntry
   nick: size_t: _uint
@@ -72,6 +78,7 @@ Pf *pf_new(void) {
 inline
 Pf *pf_copy(Pf *this) {
   /**/FNM(copy, PfEntry, e) {
+  /**/  XNULL(e)
   /**/  return pfEntry_new(e->nick, e->stocks, e->price);
   /**/}_FN
   return (Pf *)arr_from_it(it_map(arr_to_it((Arr *)this), copy));
@@ -83,6 +90,7 @@ void pf_add(Pf *this, size_t nick, size_t stocks, double price) {
 
   bool new = true;
   EACH(this, PfEntry, e) {
+    XNULL(e)
     if (e->nick == nick) {
       e->price = (e->price * e->stocks + stocks * price) / (e->stocks + stocks);
       e->stocks += stocks;
@@ -100,6 +108,7 @@ void pf_remove(Pf *this, size_t nick, size_t stocks) {
   bool error = true;
   int index = -1;
   EACH(this, PfEntry, e) {
+    XNULL(e)
     if (e->nick == nick) {
       if (e->stocks == stocks) {
         index = _i;
@@ -124,18 +133,19 @@ void pf_remove(Pf *this, size_t nick, size_t stocks) {
   }
 }
 
-PfEntry *pf_get(Pf *this, size_t nick) {
+OpfEntry *pf_get(Pf *this, size_t nick) {
   EACH(this, PfEntry, e) {
+    XNULL(e)
     if (e->nick == nick) {
-      return e;
+      return opfEntry_new(e);
     }
   }_EACH
-  return NULL;
+  return opfEntry_null();
 }
 
 size_t pf_stocks(Pf *this, size_t nick) {
-  PfEntry *e = pf_get(this, nick);
-  return e ? e->stocks : 0;
+  OpfEntry *e = pf_get(this, nick);
+  return opfEntry_is_null(e) ? 0 : opfEntry_value(e)->stocks;
 }
 
 size_t *pf_nicks(Pf *this) {
@@ -143,6 +153,7 @@ size_t *pf_nicks(Pf *this) {
   size_t *r = ATOMIC(sizeof(size_t) * size);
   size_t *p = r;
   EACH(this, PfEntry, e) {
+    XNULL(e)
     *p++ = e->nick;
   }_EACH
   return r;

@@ -36,6 +36,12 @@ PfEntry *pfEntry_from_json(Json *s);
 
 /*.-.*/
 
+#define TY PfEntry
+#define FN pfEntry
+#include "dmc/tpl/topt.h"
+#undef TY
+#undef FN
+
 ///
 typedef struct pf_Pf Pf;
 
@@ -52,7 +58,7 @@ void pf_add(Pf *this, size_t nick, size_t stocks, double price);
 void pf_remove(Pf *this, size_t nick, size_t stocks);
 
 /// pf_get returns the entry of a nick or NULL if it does not exist.
-PfEntry *pf_get(Pf *this, size_t nick);
+OpfEntry *pf_get(Pf *this, size_t nick);
 
 /// pf_get returns the stock number of a nick.
 size_t pf_stocks(Pf *this, size_t nick);

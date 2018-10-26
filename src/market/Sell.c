@@ -1,35 +1,33 @@
-// Copyright 01-Mar-2018 ºDeme
+// Copyright 26-Oct-2018 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/* .+.
-struct: @Sell
-  nick: size_t: _uint
-  stocks: size_t: _uint
-  limited: bool: _bool
-  price: double: _double 4
-*/
-
-#include "dmc/std.h"
 #include "market/Sell.h"
 #include "market/fees.h"
 
-/*.-.*/
-#include "dmc/ct/Ajson.h"
+/* .
+-Sell: serial
+  nick: int
+  stocks: int
+  limited: int:: _b
+  price: double:: _d4
+*/
+
+/*--*/
 
 struct sell_Sell {
-  size_t nick;
-  size_t stocks;
-  bool limited;
+  int nick;
+  int stocks;
+  int limited;
   double price;
 };
 
 Sell *_sell_new(
-  size_t nick,
-  size_t stocks,
-  bool limited,
+  int nick,
+  int stocks,
+  int limited,
   double price
 ) {
-  Sell *this = MALLOC(Sell);
+  Sell *this = malloc(sizeof(Sell));
   this->nick = nick;
   this->stocks = stocks;
   this->limited = limited;
@@ -37,69 +35,70 @@ Sell *_sell_new(
   return this;
 }
 
-size_t sell_nick(Sell *this) {
-  XNULL(this)
+void sell_free(Sell *this) {
+  free(this);
+};
+
+int sell_nick(Sell *this) {
   return this->nick;
 }
 
-size_t sell_stocks(Sell *this) {
-  XNULL(this)
+int sell_stocks(Sell *this) {
   return this->stocks;
 }
 
-bool sell_limited(Sell *this) {
-  XNULL(this)
+int sell_limited(Sell *this) {
   return this->limited;
 }
 
 double sell_price(Sell *this) {
-  XNULL(this)
   return this->price;
 }
 
-Json *sell_to_json(Sell *this) {
-  XNULL(this)
-  Ajson *serial = ajson_new();
-  jarr_auint(serial, this->nick);
-  jarr_auint(serial, this->stocks);
-  jarr_abool(serial, this->limited);
-  jarr_adouble(serial, this->price,  4);
-  return json_warray(serial);
+Js *sell_to_js_new(Sell *this) {
+  // Arr[Js]
+  Arr *a = arr_new(free);
+  arr_push(a, js_wi_new(this->nick));
+  arr_push(a, js_wi_new(this->stocks));
+  arr_push(a, js_wb_new(this->limited));
+  arr_push(a, js_wd_new(this->price, 4));
+  Js *r = js_wa_new(a);
+  arr_free(a);
+  return r;
 }
 
-Sell *sell_from_json(Json *js) {
-  XNULL(js)
-  Ajson *serial = json_rarray(js);
-  Sell *this = MALLOC(Sell);
-  size_t i = 0;
-  this->nick = jarr_guint(serial, i++);
-  this->stocks = jarr_guint(serial, i++);
-  this->limited = jarr_gbool(serial, i++);
-  this->price = jarr_gdouble(serial, i++);
+Sell *sell_from_js_new(Js *js) {
+  Sell *this = malloc(sizeof(Sell));
+  // Arr[Js]
+  Arr *a = js_ra_new(js);
+  int i = 0;
+  this->nick = js_ri(arr_get(a, i++));
+  this->stocks = js_ri(arr_get(a, i++));
+  this->limited = js_rb(arr_get(a, i++));
+  this->price = js_rd(arr_get(a, i++));
+  arr_free(a);
   return this;
 }
-/*.-.*/
 
-inline
-Sell *sell_new(size_t nick, size_t stocks) {
-  return _sell_new(nick, stocks, false, 0);
+/*--*/
+
+Sell *sell_new(int nick, int stocks) {
+  return _sell_new(nick, stocks, 0, 0);
 }
 
-inline
-Sell *sell_new_limited(size_t nick, size_t stocks, double price) {
-  return _sell_new(nick, stocks, true, price);
+Sell *sell_new_limited(int nick, int stocks, double price) {
+  return _sell_new(nick, stocks, 1, price);
 }
 
 double sell_do(Sell *this, double price) {
-  XNULL(this)
   if (this->limited && price < this->price) {
     return 0;
   }
   return sell_income(this->stocks, price);
 }
 
-double sell_income(size_t stocks, double price) {
-  if (price < 0.01) THROW("") "price (%2f) < 0.01", price _THROW
+double sell_income(int stocks, double price) {
+  if (price < 0.01) FAIL(str_f_new("price (%2f) < 0.01", price))
 
   double inc = stocks * price;
   return inc - fees_app(inc);

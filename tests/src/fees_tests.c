@@ -1,8 +1,7 @@
-// Copyright 03-Mar-2018 ºDeme
+// Copyright 26-Oct-2018 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-#include "feesTest.h"
-#include "dmc/std.h"
+#include "fees_tests.h"
 #include "market/fees.h"
 #include "assert.h"
 
@@ -10,7 +9,7 @@ static int eq(double n1, double n2) {
   return n1 <= (n2 + 0.00001) && (n1 >= n2 - 0.00001);
 }
 
-void fees_test() {
+void fees_tests() {
   puts("fees test:");
 
   assert(eq(fees_app(5000), 15));
@@ -26,3 +25,4 @@ void fees_test() {
 
   puts("  Finished");
 }
+

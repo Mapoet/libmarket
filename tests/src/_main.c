@@ -3,22 +3,23 @@
 
 #include "dmc/std.h"
 
-#include "quoteTest.h"
-#include "feesTest.h"
-#include "buyTest.h"
-#include "sellTest.h"
-#include "pfTest.h"
+#include "quote_tests.h"
+#include "fees_tests.h"
+#include "buy_tests.h"
+#include "sell_tests.h"
+#include "pf_tests.h"
 
 int main (int argc, char **argv) {
 
-  puts("marketTest. v201803\n");
+  puts("marketTest. v201810\n");
   sys_init("marketTest");
+/*
+  quote_tests();
+  fees_tests();
+  buy_tests();
+  sell_tests();*/
+  pf_tests();
 
-  quote_test();
-  fees_test();
-  buy_test();
-  sell_test();
-  pf_test();
-
+  sys_end();
   return(0);
 }

@@ -1,11 +1,13 @@
-CFLAGS = -Wall -rdynamic
-OBJECTS = $(subst src/market,obj,$(patsubst %.c,%.o,$(wildcard src/market/*.c)))
+LIB=market
 
-lib/libmarket.a : $(OBJECTS)
-	ar rcs lib/libmarket.a $(OBJECTS)
+CFLAGS = -Wall -rdynamic
+OBJECTS = $(subst src/$(LIB),obj,$(patsubst %.c,%.o,$(wildcard src/$(LIB)/*.c)))
+
+lib/lib$(LIB).a : $(OBJECTS)
+	if [ ! -e lib ];then mkdir lib;fi
+	ar rcs lib/lib$(LIB).a $(OBJECTS)
 
 obj/%.o : src/market/%.c include/market/%.h
-	gcc $(CFLAGS) -c $< -o $@ \
-		-Iinclude -Ilib/libdmc/include \
-		-L../lib -lmarket -Llib/libdmc -ldmc \
-		-lgc
+	if [ ! -e obj ];then mkdir obj;fi
+	gcc $(CFLAGS) -c $< -o $@ -Iinclude \
+		-Ilib/libdmc/include -Llib/libdmc -ldmc

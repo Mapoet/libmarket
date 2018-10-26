@@ -1,35 +1,33 @@
-// Copyright 01-Mar-2018 ºDeme
+// Copyright 26-Oct-2018 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/* .+.
-struct: @Buy
-  nick: size_t: _uint
-  stocks: size_t: _uint
-  limited: bool: _bool
-  price: double: _double 4
-*/
-
-#include "dmc/std.h"
 #include "market/Buy.h"
 #include "market/fees.h"
 
-/*.-.*/
-#include "dmc/ct/Ajson.h"
+/* .
+-Buy: serial
+  nick: int
+  stocks: int
+  limited: int:: _b
+  price: double:: _d4
+*/
+
+/*--*/
 
 struct buy_Buy {
-  size_t nick;
-  size_t stocks;
-  bool limited;
+  int nick;
+  int stocks;
+  int limited;
   double price;
 };
 
 Buy *_buy_new(
-  size_t nick,
-  size_t stocks,
-  bool limited,
+  int nick,
+  int stocks,
+  int limited,
   double price
 ) {
-  Buy *this = MALLOC(Buy);
+  Buy *this = malloc(sizeof(Buy));
   this->nick = nick;
   this->stocks = stocks;
   this->limited = limited;
@@ -37,62 +35,63 @@ Buy *_buy_new(
   return this;
 }
 
-size_t buy_nick(Buy *this) {
-  XNULL(this)
+void buy_free(Buy *this) {
+  free(this);
+};
+
+int buy_nick(Buy *this) {
   return this->nick;
 }
 
-size_t buy_stocks(Buy *this) {
-  XNULL(this)
+int buy_stocks(Buy *this) {
   return this->stocks;
 }
 
-bool buy_limited(Buy *this) {
-  XNULL(this)
+int buy_limited(Buy *this) {
   return this->limited;
 }
 
 double buy_price(Buy *this) {
-  XNULL(this)
   return this->price;
 }
 
-Json *buy_to_json(Buy *this) {
-  XNULL(this)
-  Ajson *serial = ajson_new();
-  jarr_auint(serial, this->nick);
-  jarr_auint(serial, this->stocks);
-  jarr_abool(serial, this->limited);
-  jarr_adouble(serial, this->price,  4);
-  return json_warray(serial);
+Js *buy_to_js_new(Buy *this) {
+  // Arr[Js]
+  Arr *a = arr_new(free);
+  arr_push(a, js_wi_new(this->nick));
+  arr_push(a, js_wi_new(this->stocks));
+  arr_push(a, js_wb_new(this->limited));
+  arr_push(a, js_wd_new(this->price, 4));
+  Js *r = js_wa_new(a);
+  arr_free(a);
+  return r;
 }
 
-Buy *buy_from_json(Json *js) {
-  XNULL(js)
-  Ajson *serial = json_rarray(js);
-  Buy *this = MALLOC(Buy);
-  size_t i = 0;
-  this->nick = jarr_guint(serial, i++);
-  this->stocks = jarr_guint(serial, i++);
-  this->limited = jarr_gbool(serial, i++);
-  this->price = jarr_gdouble(serial, i++);
+Buy *buy_from_js_new(Js *js) {
+  Buy *this = malloc(sizeof(Buy));
+  // Arr[Js]
+  Arr *a = js_ra_new(js);
+  int i = 0;
+  this->nick = js_ri(arr_get(a, i++));
+  this->stocks = js_ri(arr_get(a, i++));
+  this->limited = js_rb(arr_get(a, i++));
+  this->price = js_rd(arr_get(a, i++));
+  arr_free(a);
   return this;
 }
-/*.-.*/
 
-inline
-Buy *buy_new(size_t nick, size_t stocks, double price) {
-  return _buy_new(nick, stocks, false, price);
+/*--*/
+
+Buy *buy_new(int nick, int stocks, double price) {
+  return _buy_new(nick, stocks, 0, price);
 }
 
-inline
-Buy *buy_new_limited(size_t nick, size_t stocks, double price) {
-  return _buy_new(nick, stocks, true, price);
+Buy *buy_limited_new(int nick, int stocks, double price) {
+  return _buy_new(nick, stocks, 1, price);
 }
 
 double buy_do(Buy *this, double price) {
-  XNULL(this)
-  if (price < 0.01) THROW("") "price (%2f) < 0.01", price _THROW
+  if (price < 0.01) FAIL(str_f_new("price (%2f) < 0.01", price))
 
   if (this->limited && price > this->price) {
     return 0;
@@ -101,11 +100,11 @@ double buy_do(Buy *this, double price) {
   return r + fees_app(r);
 }
 
-size_t buy_calc(double money, double price) {
-  if (price < 0.01) THROW("") "price (%2f) < 0.01", price _THROW
+int buy_calc(double money, double price) {
+  if (price < 0.01) FAIL(str_f_new("price (%2f) < 0.01", price))
 
   double order_money = money - fees_app(money);
-  size_t stocks = (size_t)(order_money / price);
+  int stocks = (int)(order_money / price);
   for(;;) {
     double cost = stocks * price;
     cost += fees_app(cost);

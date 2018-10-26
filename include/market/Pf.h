@@ -1,46 +1,11 @@
-// Copyright 03-Mar-2018 ºDeme
+// Copyright 26-Oct-2018 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/// Pf management
-
 #ifndef MARKET_PF_H
-  # define MARKET_PF_H
+  #define MARKET_PF_H
 
-#include <stdlib.h>
-#include <dmc/Json.h>
-
-/*.-.*/
-
-#include "dmc/Json.h"
-
-///
-typedef struct pfEntry_PfEntry PfEntry;
-
-///
-PfEntry *pfEntry_new(size_t nick, size_t stocks, double price);
-
-///
-size_t pfEntry_nick(PfEntry *this);
-
-///
-size_t pfEntry_stocks(PfEntry *this);
-
-///
-double pfEntry_price(PfEntry *this);
-
-///
-Json *pfEntry_to_json(PfEntry *this);
-
-///
-PfEntry *pfEntry_from_json(Json *s);
-
-/*.-.*/
-
-#define TY PfEntry
-#define FN pfEntry
-#include "dmc/tpl/topt.h"
-#undef TY
-#undef FN
+#include "dmc/std.h"
+#include "dmc/Iarr.h"
 
 ///
 typedef struct pf_Pf Pf;
@@ -49,32 +14,37 @@ typedef struct pf_Pf Pf;
 Pf *pf_new(void);
 
 ///
-Pf *pf_copy(Pf *this);
+void pf_free(Pf *this);
 
 ///
-void pf_add(Pf *this, size_t nick, size_t stocks, double price);
+Pf *pf_copy_new(Pf *this);
 
 ///
-void pf_remove(Pf *this, size_t nick, size_t stocks);
-
-/// pf_get returns the entry of a nick or NULL if it does not exist.
-OpfEntry *pf_get(Pf *this, size_t nick);
-
-/// pf_get returns the stock number of a nick.
-size_t pf_stocks(Pf *this, size_t nick);
-
-///  pf_nicks returns an array of size 'pf_size', with all the nicks of 'this'.
-size_t *pf_nicks(Pf *this);
+void pf_add(Pf *this, int nick, int stocks, double price);
 
 ///
-size_t pf_size(Pf *this);
+int pf_size(Pf *this);
+
+/// Returns stocks and price of a nick. if this does not exist, it returns
+/// stocks = 0.
+void pf_get(int *stocks, double *price, Pf *this, int nick);
+
+/// Returns the stock number of a nick or 0 if this does not exist.
+int pf_stocks(Pf *this, int nick);
+
+///  Returns an array with the nicks of 'this'.
+Iarr *pf_nicks_new(Pf *this);
+
+/// Removes a 'stocks' number of nick.
+void pf_remove_stocks(Pf *this, int nick, int stocks);
+
+/// Removes all stocks of nick.
+void pf_remove(Pf *this, int nick);
 
 ///
-Json *pf_to_json(Pf *this);
+Js *pf_to_js_new(Pf *this);
 
 ///
-Pf *pf_from_json(Json *s);
+Pf *pf_from_js_new(Js *s);
 
 #endif
-
-
